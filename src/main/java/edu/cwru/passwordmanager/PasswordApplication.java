@@ -10,12 +10,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class PasswordApplication extends Application {
-    // TODO: Give your app a anme!
-    final private String applicationName = "My Password Manager";
+    // TODone: Give your app a anme!
+    final private String applicationName = "NSQ5's Password Manager";
     static Stage primaryStage = null;
     @Override
     public void start(Stage stage) throws IOException {
-        // TODO: Select Preferred
+        // TODone: Select Preferred
         //  Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
 
