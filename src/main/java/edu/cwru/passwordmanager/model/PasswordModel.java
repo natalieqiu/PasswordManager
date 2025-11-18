@@ -109,6 +109,7 @@ public class PasswordModel {
         try {
             key = setKey(password);
             cipher.init(Cipher.ENCRYPT_MODE, key);
+
             tokenCheck = encode(verifyString);
             System.out.println(salt + separator + tokenCheck);
         } catch (Exception e) {
