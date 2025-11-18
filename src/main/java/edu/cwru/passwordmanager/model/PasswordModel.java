@@ -73,12 +73,12 @@ public class PasswordModel {
 
         try {
             key = setKey(password);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
+            cipher.init(Cipher.ENCRYPT_MODE, setKey(password) );
             String encryptedEncodedToken = encode(verifyString);
             BufferedWriter fw = new BufferedWriter( new FileWriter(passwordFile, true) );
 
-            System.out.println(saltString + ": " + encryptedEncodedToken);//debug code
-            fw.write(saltString + ": " + encryptedEncodedToken);
+            System.out.println(saltString + separator + encryptedEncodedToken);//debug code
+            fw.write(saltString + separator + encryptedEncodedToken);
             fw.close();
 
         } catch (Exception e) {
@@ -93,23 +93,24 @@ public class PasswordModel {
         passwordFilePassword = password; // DO NOT CHANGE
 
         // TODO: Check first line and use salt to verify that you can decrypt the token using the password from the user
-        BufferedReader fr = null;
         String[] data = null;
         try {
-            fr = new BufferedReader(new FileReader(passwordFile) );
+            BufferedReader fr = new BufferedReader(new FileReader(passwordFile) );
             data = fr.readLine().split(separator);
+            for (String i:data) {System.out.println(i); }//debug
             fr.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        //Scanner fr = new Scanner(new File (filepathString));
-
-        //set salt
+        //read salt
         salt = Base64.getDecoder().decode(data[0]);
         //System.out.println(salt);//debug code
         String tokenCheck = null;
         try {
+            key = setKey(password);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
             tokenCheck = encode(verifyString);
+            System.out.println(salt + separator + tokenCheck);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -151,11 +152,18 @@ public class PasswordModel {
     }
 
     private static String encode(String message) throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return new String(Base64.getEncoder().encode(  cipher.doFinal(message.getBytes()) ));
     }
 
+    /***
+     *
+     * @param message
+     * @return
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws InvalidKeyException
+     */
     private static String decode(String message) throws IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         cipher.init(Cipher.DECRYPT_MODE, key);
 
